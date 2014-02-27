@@ -1,0 +1,29 @@
+{
+  "name": "amd-initializer",
+  "version": "0.0.0",
+  "homepage": "https://github.com/BenSayers/amd-initializer",
+  "authors": [
+    "Ben Sayers"
+  ],
+  "description": "A small JavaScript library that loads AMD modules based on decorated dom elements.",
+  "main": "amd-initializer.js",
+  "keywords": [
+    "amd",
+    "initializer",
+    "loader",
+    "dom",
+    "decoration",
+    "requirejs",
+    "module"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [],
+  "dependencies": {
+    "jquery": "~2.1.0",
+    "requirejs": "~2.1.11"
+  },
+  "devDependencies": {
+    "jasmine": "~1.3.1"
+  }
+}

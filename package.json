@@ -1,0 +1,20 @@
+{
+    "name": "amd-initializer",
+    "version": "0.0.0",
+    "description": "amd-loader ==========",
+    "main": "",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/BenSayers/amd-initializer.git"
+    },
+    "author": "Ben Sayers",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/BenSayers/amd-initializer/issues"
+    },
+    "homepage": "https://github.com/BenSayers/amd-initializer",
+    "private": true
+}

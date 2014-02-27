@@ -1,2 +1,2 @@
-amd-loader
+amd-initializer
 ==========
