@@ -1,20 +1,34 @@
 {
-    "name": "amd-initializer",
-    "version": "0.0.0",
-    "description": "amd-loader ==========",
-    "main": "",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/BenSayers/amd-initializer.git"
-    },
-    "author": "Ben Sayers",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/BenSayers/amd-initializer/issues"
-    },
-    "homepage": "https://github.com/BenSayers/amd-initializer",
-    "private": true
+  "name": "amd-initializer",
+  "version": "0.0.0",
+  "description": "amd-loader ==========",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BenSayers/amd-initializer.git"
+  },
+  "author": "Ben Sayers",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BenSayers/amd-initializer/issues"
+  },
+  "homepage": "https://github.com/BenSayers/amd-initializer",
+  "private": true,
+  "devDependencies": {
+    "grunt": "^0.4.2",
+    "karma-script-launcher": "^0.1.0",
+    "karma-chrome-launcher": "^0.1.2",
+    "karma-firefox-launcher": "^0.1.3",
+    "karma-html2js-preprocessor": "^0.1.0",
+    "karma-jasmine": "~0.2.0",
+    "karma-coffee-preprocessor": "^0.1.3",
+    "requirejs": "^2.1.11",
+    "karma-requirejs": "^0.2.1",
+    "karma-phantomjs-launcher": "^0.1.2",
+    "karma": "^0.10.9",
+    "grunt-karma": "^0.6.2"
+  }
 }
