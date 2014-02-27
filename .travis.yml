@@ -7,3 +7,8 @@
   - npm install -g bower
   - npm install
   - bower install
+notifications:
+  email:
+    - bsayaz@gmail.com
+  on_success: always
+  on_failure: always
