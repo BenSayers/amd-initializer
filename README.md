@@ -1,4 +1,4 @@
-#amd-initializer
+#amd-initializer [![Build Status](https://travis-ci.org/BenSayers/amd-initializer.png?branch=master)](https://travis-ci.org/BenSayers/amd-initializer)
 
 ##Development Dependencies
 - nodejs 0.10
