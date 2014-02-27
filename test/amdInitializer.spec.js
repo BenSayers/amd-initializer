@@ -1,13 +1,12 @@
 define(['squire'], function (Squire) {
     describe('amdInitializer', function () {
-        var async = new AsyncSpec(this);
         var amdInitializer;
         var require;
 
-        async.beforeEach(function (done) {
+        beforeEach(function (done) {
             require = jasmine.createSpy('require');
             var injector = new Squire();
-            injector.mock({'utilities/require': Squire.Helpers.returns(require)});
+            injector.mock({'utilities/require': require});
             injector.require(['amdInitializer'], function (loadedAmdInitializer) {
                 amdInitializer = loadedAmdInitializer;
                 done();
@@ -18,7 +17,7 @@ define(['squire'], function (Squire) {
             var $target = $('<div><div class="module" data-module-name="path/to/module"></div></div>');
             amdInitializer.load($target);
 
-            expect(require.callCount).toBe(1);
+            expect(require.calls.count()).toBe(1);
             expect(require).toHaveBeenCalledWith(['path/to/module'], jasmine.any(Function));
         });
 
@@ -26,11 +25,11 @@ define(['squire'], function (Squire) {
             var $target = $('<div><div class="module" data-module-name="path/to/module"></div></div>');
             amdInitializer.load($target);
             var module = jasmine.createSpyObj('module', ['load']);
-            var callback = require.mostRecentCall.args[1];
+            var callback = require.calls.mostRecent().args[1];
             callback(module);
 
             expect(module.load).toHaveBeenCalled();
-            var loadArgs = module.load.mostRecentCall.args;
+            var loadArgs = module.load.calls.mostRecent().args;
             expect(loadArgs[0][0]).toBe($target.find('.module')[0], 'the $target passed to the module');
             expect(loadArgs[1]).toEqual({}, 'the parameters passed to the module');
         });
@@ -39,7 +38,7 @@ define(['squire'], function (Squire) {
             var $target = $('<div><div class="module" data-module-name="path/to/module" data-parameter-one="param-1" data-parameter-two="param2"></div></div>');
             amdInitializer.load($target);
             var module = jasmine.createSpyObj('module', ['load']);
-            var callback = require.mostRecentCall.args[1];
+            var callback = require.calls.mostRecent().args[1];
             callback(module);
 
             expect(module.load).toHaveBeenCalledWith(jasmine.any(Object), {
@@ -52,7 +51,7 @@ define(['squire'], function (Squire) {
             var $target = $('<div><div class="module" data-module-name="path/to/module1"></div><div class="module" data-module-name="path/to/module2"></div></div>');
             amdInitializer.load($target);
 
-            expect(require.callCount).toBe(2);
+            expect(require.calls.count()).toBe(2);
             expect(require).toHaveBeenCalledWith(['path/to/module1'], jasmine.any(Function));
             expect(require).toHaveBeenCalledWith(['path/to/module2'], jasmine.any(Function));
         });
@@ -68,8 +67,8 @@ define(['squire'], function (Squire) {
             var $target = $('<div><div class="module" data-module-name="path/to/module1"></div><div class="module" data-module-name="path/to/module2"></div></div>');
             var modulesLoaded = amdInitializer.load($target);
             var module = jasmine.createSpyObj('module', ['load']);
-            var callbackForModule1 = require.argsForCall[0][1];
-            var callbackForModule2 = require.argsForCall[1][1];
+            var callbackForModule1 = require.calls.argsFor(0)[1];
+            var callbackForModule2 = require.calls.argsFor(1)[1];
             callbackForModule1(module);
             callbackForModule2(module);
 
@@ -80,11 +79,11 @@ define(['squire'], function (Squire) {
             var $target = $('<div><div class="module" data-module-name="path/to/module1"></div><div class="module" data-module-name="path/to/module2"></div></div>');
             amdInitializer.load($target);
             var module1 = jasmine.createSpyObj('module1', ['load']);
-            module1.load.andThrow('module1 failed to load');
-            var callback1 = require.calls[0].args[1];
+            module1.load.and.throwError('module1 failed to load');
+            var callback1 = require.calls.argsFor(0)[1];
             callback1(module1);
             var module2 = jasmine.createSpyObj('module2', ['load']);
-            var callback2 = require.calls[1].args[1];
+            var callback2 = require.calls.argsFor(1)[1];
             callback2(module2);
 
             expect(module1.load).toHaveBeenCalled();
@@ -95,11 +94,11 @@ define(['squire'], function (Squire) {
             var $target = $('<div><div class="module" data-module-name="path/to/module1"></div><div class="module" data-module-name="path/to/module2"></div></div>');
             var modulesLoaded = amdInitializer.load($target);
             var module1 = jasmine.createSpyObj('module1', ['load']);
-            module1.load.andThrow('module1 failed to load');
-            var callback1 = require.calls[0].args[1];
+            module1.load.and.throwError('module1 failed to load');
+            var callback1 = require.calls.argsFor(0)[1];
             callback1(module1);
             var module2 = jasmine.createSpyObj('module2', ['load']);
-            var callback2 = require.calls[1].args[1];
+            var callback2 = require.calls.argsFor(1)[1];
             callback2(module2);
 
             expect(modulesLoaded.state()).toBe('resolved');
