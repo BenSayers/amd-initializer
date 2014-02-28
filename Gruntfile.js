@@ -56,13 +56,19 @@ module.exports = function (grunt) {
                     src: ['src/**/*.js', 'test/**/*.js']
                 }
             }
-
+        },
+        release: {
+            options: {
+                file: 'bower.json',
+                npm: false
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-release');
 
     grunt.registerTask('build', ['jshint:source', 'requirejs:combined', 'requirejs:minified', 'jshint:build'])
     grunt.registerTask('test', ['karma:unit']);
