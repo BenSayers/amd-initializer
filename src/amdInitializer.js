@@ -1,4 +1,4 @@
-define(['utilities/require', 'jquery'], function (require, $) {
+define(['jquery'], function ($) {
     var loadModule = function () {
         var moduleLoaded = new $.Deferred();
         var $target = $(this);

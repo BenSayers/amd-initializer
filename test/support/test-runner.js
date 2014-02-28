@@ -10,12 +10,7 @@
     }
 
     require.config({
-        baseUrl: '/base/src',
-        paths: {
-            'test': '../test',
-            'jquery': '../bower_components/jquery/dist/jquery',
-            'squire': '../bower_components/squire/src/Squire'
-        }
+        baseUrl: '/base/src'
     });
 
     return require(tests, function () {

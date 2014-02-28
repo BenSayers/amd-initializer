@@ -4,9 +4,9 @@ define(['squire'], function (Squire) {
         var require;
 
         beforeEach(function (done) {
-            require = jasmine.createSpy('require');
+            spyOn(window, 'require');
+            require = window.require;
             var injector = new Squire();
-            injector.mock({'utilities/require': require});
             injector.require(['amdInitializer'], function (loadedAmdInitializer) {
                 amdInitializer = loadedAmdInitializer;
                 done();
