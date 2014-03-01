@@ -6,7 +6,7 @@
     "Ben Sayers"
   ],
   "description": "A small JavaScript library that loads AMD modules based on decorated dom elements.",
-  "main": "amd-initializer.js",
+  "main": "dist/amd-initializer.js",
   "keywords": [
     "amd",
     "initializer",
@@ -17,7 +17,14 @@
     "module"
   ],
   "license": "MIT",
-  "ignore": [],
+  "ignore": [
+      "src",
+      "test",
+      ".gitignore",
+      ".travis.yml",
+      "Gruntfile.js",
+      "package.json"
+  ],
   "dependencies": {
     "jquery": "~2.1.0",
     "requirejs": "~2.1.11"
