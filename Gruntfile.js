@@ -98,7 +98,5 @@ module.exports = function (grunt) {
         grunt.task.run(['build', 'test', 'copy:release', 'push::commit-only']);
     });
 
-    grunt.registerTask('debug', function)
-
     grunt.registerTask('default', ['build', 'test']);
 };
