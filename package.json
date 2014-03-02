@@ -4,7 +4,7 @@
   "description": "amd-loader ==========",
   "main": "",
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt"
   },
   "repository": {
     "type": "git",
