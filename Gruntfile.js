@@ -1,10 +1,6 @@
 module.exports = function (grunt) {
-    var readConfig = function () {
-        return grunt.file.readJSON('bower.json');
-    };
-
     grunt.initConfig({
-        pkg: readConfig(),
+        pkg: grunt.file.readJSON('bower.json'),
         karma: {
             options: {
                 browsers: ['PhantomJS'],
@@ -70,32 +66,31 @@ module.exports = function (grunt) {
                 dest: 'dist/'
             }
         },
-        push: {
+        bump: {
             options: {
                 files: ['bower.json'],
-                releaseBranch: ['master'],
+                updateConfigs: ['pkg'],
                 commitMessage: 'Release %VERSION%',
                 commitFiles: ['-a'],
-                tagName: '%VERSION%'
+                tagName: '%VERSION%',
+                pushTo: 'origin'
             }
         }
     });
 
+    grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-exec');
     grunt.loadNpmTasks('grunt-karma');
-    grunt.loadNpmTasks('grunt-push-release');
 
     grunt.registerTask('build', ['jshint:source', 'requirejs:combined', 'requirejs:minified', 'jshint:build'])
     grunt.registerTask('test', ['karma:unit']);
     grunt.registerTask('watch', ['karma:watch']);
     grunt.registerTask('release', function(versionType) {
         versionType = versionType || 'patch';
-        grunt.task.run('push:' + versionType + ':bump-only');
-        grunt.config.set('pkg', readConfig())
-        grunt.task.run(['build', 'test', 'copy:release', 'push::commit-only']);
+        grunt.task.run(['bump-only:' + versionType, 'build', 'test', 'copy:release', 'bump-commit']);
     });
 
     grunt.registerTask('default', ['build', 'test']);
