@@ -9,7 +9,7 @@
   - bower install
 notifications:
   email:
-      recipients:
-        - bsayaz@gmail.com
-  on_success: always
-  on_failure: always
+    recipients:
+      - bsayaz@gmail.com
+    on_success: always
+    on_failure: always
