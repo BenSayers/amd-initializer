@@ -1,6 +1,10 @@
 module.exports = function (grunt) {
+    var readConfig = function () {
+        return grunt.file.readJSON('bower.json');
+    };
+
     grunt.initConfig({
-        pkg: grunt.file.readJSON('bower.json'),
+        pkg: readConfig(),
         karma: {
             options: {
                 browsers: ['PhantomJS'],
@@ -89,8 +93,12 @@ module.exports = function (grunt) {
     grunt.registerTask('watch', ['karma:watch']);
     grunt.registerTask('release', function(versionType) {
         versionType = versionType || 'patch';
-        grunt.task.run(['push:' + versionType + ':bump-only', 'build', 'test', 'copy:release', 'push::commit-only']);
+        grunt.task.run('push:' + versionType + ':bump-only');
+        grunt.config.set('pkg', readConfig())
+        grunt.task.run(['build', 'test', 'copy:release', 'push::commit-only']);
     });
+
+    grunt.registerTask('debug', function)
 
     grunt.registerTask('default', ['build', 'test']);
 };
