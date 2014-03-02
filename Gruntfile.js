@@ -57,21 +57,22 @@ module.exports = function (grunt) {
                 }
             }
         },
-        release: {
-            options: {
-                file: 'bower.json',
-                npm: false,
-                push: false
-            }
-        },
         copy: {
             release: {
-                files: {expand: true, src: ['build/**'], dest: 'dist/'}
+                expand: true,
+                cwd: 'build/',
+                flatten: true,
+                src: '*',
+                dest: 'dist/'
             }
         },
-        exec: {
-            commitAndPushRelease: {
-                cmd: 'git add --all; git commit --amend -C HEAD; git push'
+        push: {
+            options: {
+                files: ['bower.json'],
+                releaseBranch: ['master'],
+                commitMessage: 'Release %VERSION%',
+                commitFiles: ['-a'],
+                tagName: '%VERSION%'
             }
         }
     });
@@ -81,15 +82,15 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-exec');
     grunt.loadNpmTasks('grunt-karma');
-    grunt.loadNpmTasks('grunt-release');
+    grunt.loadNpmTasks('grunt-push-release');
 
     grunt.registerTask('build', ['jshint:source', 'requirejs:combined', 'requirejs:minified', 'jshint:build'])
     grunt.registerTask('test', ['karma:unit']);
     grunt.registerTask('watch', ['karma:watch']);
-    grunt.registerTask('deploy', ['deploy:patch']);
-    grunt.registerTask('deploy:patch', ['build', 'test', 'copy:release', 'release:patch', 'exec:commitAndPushRelease']);
-    grunt.registerTask('deploy:minor', ['build', 'test', 'copy:release', 'release:minor', 'exec:commitAndPushRelease']);
-    grunt.registerTask('deploy:major', ['build', 'test', 'copy:release', 'release:major', 'exec:commitAndPushRelease']);
+    grunt.registerTask('release', function(versionType) {
+        versionType = versionType || 'patch';
+        grunt.task.run(['push:' + versionType + ':bump-only', 'build', 'test', 'push::commit-only']);
+    });
 
-    grunt.registerTask('default', ['test']);
+    grunt.registerTask('default', ['build', 'test']);
 };
