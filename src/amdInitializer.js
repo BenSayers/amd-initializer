@@ -1,6 +1,6 @@
 define(['jquery'], function ($) {
-    var loadModule = function () {
-        var moduleLoaded = new $.Deferred();
+    var initializeModule = function () {
+        var moduleInitialized = new $.Deferred();
         var $target = $(this);
         var data = $(this).data();
 
@@ -14,15 +14,15 @@ define(['jquery'], function ($) {
 
             }
 
-            return moduleLoaded.resolve();
+            return moduleInitialized.resolve();
         });
 
-        return moduleLoaded.promise();
+        return moduleInitialized.promise();
     };
 
     return {
-        load: function ($container) {
-            var modulesLoadedPromises = $container.find('.module').map(loadModule).toArray();
+        initialize: function (options) {
+            var modulesLoadedPromises = $('body').find(options.selector).map(initializeModule).toArray();
             return $.when.apply($, modulesLoadedPromises).promise();
         }
     };

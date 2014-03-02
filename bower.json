@@ -18,18 +18,19 @@
   ],
   "license": "MIT",
   "ignore": [
-      "src",
-      "test",
-      ".gitignore",
-      ".travis.yml",
-      "Gruntfile.js",
-      "package.json"
+    "src",
+    "test",
+    ".gitignore",
+    ".travis.yml",
+    "Gruntfile.js",
+    "package.json"
   ],
   "dependencies": {
     "jquery": "~2.1.0",
     "requirejs": "~2.1.11"
   },
   "devDependencies": {
-    "squire": "~0.2.0"
+    "squire": "~0.2.0",
+    "jasmine-jquery": "~2.0.3"
   }
 }
