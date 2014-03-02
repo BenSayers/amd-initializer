@@ -89,7 +89,7 @@ module.exports = function (grunt) {
     grunt.registerTask('watch', ['karma:watch']);
     grunt.registerTask('release', function(versionType) {
         versionType = versionType || 'patch';
-        grunt.task.run(['push:' + versionType + ':bump-only', 'build', 'test', 'push::commit-only']);
+        grunt.task.run(['push:' + versionType + ':bump-only', 'build', 'test', 'copy:release', 'push::commit-only']);
     });
 
     grunt.registerTask('default', ['build', 'test']);
