@@ -1,4 +1,4 @@
-/*! amdInitializer v0.0.4 | (c) 2014 Ben Sayers | Released under the MIT licence */
+/*! amdInitializer v0.0.6 | (c) 2014 Ben Sayers | Released under the MIT licence */
 define('amdInitializer',['jquery'], function ($) {
     var loadModule = function () {
         var moduleLoaded = new $.Deferred();
