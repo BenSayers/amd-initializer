@@ -4,7 +4,7 @@ amd-initializer is a small JavaScript library that loads AMD modules based on de
 This library is under early development and does not yet have a stable api.
 
 ##Installing
-amd-initializer declares itself as an AMD module. It has dependencies on requirejs and jquery. You need to ensure that the AMD dependency `jquery` will resolve to the jquery library in order for amd-initializer to work.
+amd-initializer declares itself as an AMD module. It has dependencies on any AMD loader, jquery and a library called skate. You need to ensure that the AMD dependencies `jquery` and `skate` will resolve in order for amd-initializer to work.
 
 The following installation options are available:
 
