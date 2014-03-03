@@ -1,7 +1,10 @@
-/*! amdInitializer v0.0.6 | (c) 2014 Ben Sayers | Released under the MIT licence */
-define('amdInitializer',['jquery'], function ($) {
-    var loadModule = function () {
-        var moduleLoaded = new $.Deferred();
+/*! amdInitializer v0.0.7 | (c) 2014 Ben Sayers | Released under the MIT licence */
+define('amdInitializer/require',['require'], function (require) {
+    return require;
+});
+define('amdInitializer',['jquery', 'skate', 'amdInitializer/require'], function ($, skate, require) {
+    var initializeModule = function () {
+        var moduleInitialized = new $.Deferred();
         var $target = $(this);
         var data = $(this).data();
 
@@ -15,16 +18,31 @@ define('amdInitializer',['jquery'], function ($) {
 
             }
 
-            return moduleLoaded.resolve();
+            return moduleInitialized.resolve();
         });
 
-        return moduleLoaded.promise();
+        return moduleInitialized.promise();
     };
 
     return {
-        load: function ($container) {
-            var modulesLoadedPromises = $container.find('.module').map(loadModule).toArray();
-            return $.when.apply($, modulesLoadedPromises).promise();
+        load: function (options) {
+            var moduleLoadedCallbacks = $.Callbacks();
+            skate(options.selector, function (element) {
+                initializeModule.apply(element).then(function () {
+                    moduleLoadedCallbacks.fire();
+                });
+            });
+
+            var createApi = function () {
+                return {
+                    onModuleLoaded: function (callback) {
+                        moduleLoadedCallbacks.add(callback);
+                    }
+                };
+            };
+
+            var modulesLoadedPromises = $('body').find(options.selector).map(initializeModule).toArray();
+            return $.when.apply($, modulesLoadedPromises).then(createApi).promise();
         }
     };
 });
