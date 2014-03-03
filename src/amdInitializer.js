@@ -1,4 +1,4 @@
-define(['jquery', 'skate'], function ($, skate) {
+define(['jquery', 'skate', 'amdInitializer/require'], function ($, skate, require) {
     var initializeModule = function () {
         var moduleInitialized = new $.Deferred();
         var $target = $(this);
@@ -23,24 +23,22 @@ define(['jquery', 'skate'], function ($, skate) {
     return {
         load: function (options) {
             var moduleLoadedCallbacks = $.Callbacks();
-            var skateApi = skate(options.selector, function (element) {
-                initializeModule.apply(element);
-                moduleLoadedCallbacks.fire();
+            skate(options.selector, function (element) {
+                initializeModule.apply(element).then(function () {
+                    moduleLoadedCallbacks.fire();
+                });
             });
 
             var createApi = function () {
                 return {
                     onModuleLoaded: function (callback) {
                         moduleLoadedCallbacks.add(callback);
-                    },
-                    unload: function () {
-                        skateApi.destroy();
                     }
-                }
+                };
             };
 
             var modulesLoadedPromises = $('body').find(options.selector).map(initializeModule).toArray();
-            return $.when.apply($, modulesLoadedPromises).then(createApi).promise()
+            return $.when.apply($, modulesLoadedPromises).then(createApi).promise();
         }
     };
 });
