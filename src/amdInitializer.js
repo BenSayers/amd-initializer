@@ -1,4 +1,4 @@
-define(['jquery'], function ($) {
+define(['jquery', 'skate'], function ($, skate) {
     var initializeModule = function () {
         var moduleInitialized = new $.Deferred();
         var $target = $(this);
@@ -21,9 +21,26 @@ define(['jquery'], function ($) {
     };
 
     return {
-        initialize: function (options) {
+        load: function (options) {
+            var moduleLoadedCallbacks = $.Callbacks();
+            var skateApi = skate(options.selector, function (element) {
+                initializeModule.apply(element);
+                moduleLoadedCallbacks.fire();
+            });
+
+            var createApi = function () {
+                return {
+                    onModuleLoaded: function (callback) {
+                        moduleLoadedCallbacks.add(callback);
+                    },
+                    unload: function () {
+                        skateApi.destroy();
+                    }
+                }
+            };
+
             var modulesLoadedPromises = $('body').find(options.selector).map(initializeModule).toArray();
-            return $.when.apply($, modulesLoadedPromises).promise();
+            return $.when.apply($, modulesLoadedPromises).then(createApi).promise()
         }
     };
 });

@@ -28,7 +28,7 @@ module.exports = function (grunt) {
         },
         requirejs: {
             options: {
-                exclude: ['jquery'],
+                exclude: ['jquery', 'skate'],
                 mainConfigFile: 'src/require.config.js',
                 name: 'amdInitializer',
                 wrap: {
