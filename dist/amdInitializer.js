@@ -1,48 +1,59 @@
-/*! amdInitializer v0.0.7 | (c) 2014 Ben Sayers | Released under the MIT licence */
+/*! amdInitializer v0.0.8 | (c) 2014 Ben Sayers | Released under the MIT licence */
 define('amdInitializer/require',['require'], function (require) {
     return require;
 });
 define('amdInitializer',['jquery', 'skate', 'amdInitializer/require'], function ($, skate, require) {
-    var initializeModule = function () {
-        var moduleInitialized = new $.Deferred();
-        var $target = $(this);
-        var data = $(this).data();
+    var amdInitializerFactory = function (selector) {
+        var moduleLoadedCallbacks = $.Callbacks();
 
-        require([data.moduleName], function (module) {
-            var copyOfData = $.extend({}, data);
-            delete copyOfData.moduleName;
+        var initializeModule = function () {
+            var moduleInitialized = new $.Deferred();
+            var $target = $(this);
+            var data = $target.data();
 
-            try {
-                module.load($target, copyOfData);
-            } catch (error) {
-
+            if ($target.attr('data-module-loaded') === 'true') {
+                moduleInitialized.resolve(data.moduleName);
+                return moduleInitialized.promise();
             }
 
-            return moduleInitialized.resolve();
-        });
+            $target.attr('data-module-loaded', 'true');
 
-        return moduleInitialized.promise();
+            require([data.moduleName], function (module) {
+                var copyOfData = $.extend({}, data);
+                delete copyOfData.moduleName;
+
+                try {
+                    module.load($target, copyOfData);
+                } catch (error) {
+
+                }
+
+                moduleLoadedCallbacks.fire({name: data.moduleName});
+
+                return moduleInitialized.resolve(data.moduleName);
+            });
+
+            return moduleInitialized.promise();
+        };
+
+        var skateComponent = skate(selector, function (element) {
+            initializeModule.apply(element);
+        });
+        var modulesLoadedPromises = $('body').find(selector).map(initializeModule).toArray();
+        return {
+            initialModulesLoaded: $.when.apply($, modulesLoadedPromises).promise(),
+            onModuleLoaded: function (callback) {
+                moduleLoadedCallbacks.add(callback);
+            },
+            unload: function () {
+                skateComponent.destroy();
+            }
+        };
     };
 
     return {
         load: function (options) {
-            var moduleLoadedCallbacks = $.Callbacks();
-            skate(options.selector, function (element) {
-                initializeModule.apply(element).then(function () {
-                    moduleLoadedCallbacks.fire();
-                });
-            });
-
-            var createApi = function () {
-                return {
-                    onModuleLoaded: function (callback) {
-                        moduleLoadedCallbacks.add(callback);
-                    }
-                };
-            };
-
-            var modulesLoadedPromises = $('body').find(options.selector).map(initializeModule).toArray();
-            return $.when.apply($, modulesLoadedPromises).then(createApi).promise();
+            return amdInitializerFactory(options.selector);
         }
     };
 });
