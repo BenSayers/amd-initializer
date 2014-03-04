@@ -25,13 +25,10 @@ Put dom elements on the page that can be uniquely identified with a css selector
 
     <div class="module" data-module-name="path/to/amd/module" data-param-one="value-1" data-param-two="value-1"></div>
 
-__data-module-name__
+where
 
-This is the amd module name of the module you would like loaded.
-
-__data-param-one, data-param-two__
-
-These are parameters that will be passed to the amd module.
+- `data-module-name`: This is the amd module name of the module you would like loaded.
+- `data-param-one`, `data-param-two`: These are parameters that will be passed to the amd module.
 
 ###AMD Modules
 Declare an AMD module matching the name put into the html.
@@ -44,28 +41,23 @@ Declare an AMD module matching the name put into the html.
         }
     });
 
-The module must return an object with a `load` function on it that accepts a `$target` and `params`.
+The module must return an object with a `load` function on it. The function will be passed the following parameters (in order):
 
-__$target__
-
-Is a jQuery object pointing to the dom element the module was loaded on. Append any html and other behaviour to this element.
-
-__params__
-
-All the other data attributes except data-module-name will be passed as a JavaScript object. The attributes are converted to a JavaScript object using [jQuery.data](http://api.jquery.com/data/#data-html5).
+- `$target`: A jQuery object pointing to the dom element the module was loaded on. Append any html and other behaviour to this element.
+- `params` - All the other data attributes except data-module-name will be passed as a JavaScript object. The attributes are converted to a JavaScript object using [jQuery.data](http://api.jquery.com/data/#data-html5).
 
 ###Starting amd-initializer
 amdInitializer needs to be loaded onto the page and told to start looking at the dom for modules.
 
     require(['amdInitializer'], function(initializer) {
-        initializer.load('.module');
+        initializer.load({ selector: '.module' });
     });
 
-amd-initializer declares itself as an AMD module called `amdInitializer`.
+amd-initializer declares itself as an AMD module called `amdInitializer`. When `load` is first called the page will be searched for matching dom elements and modules found will be loaded immediately. If matching dom elements are added to the page after load is called they will automatically be discovered and the modules loaded.
 
-The string passed to `load` is a css selector of the dom elements that are decorated with module names and parameters.
+The object passed to the `load` function supports the following options:
 
-When first called amd-initializer will search the page for matching dom elements and load any modules it finds. If dom elements are added to the page after load is called they will automatically be discovered.
+- `selector`: A css selector pointing to the dom elements that are decorated with module names and parameters.
 
 ##Contributing
 
