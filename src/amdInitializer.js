@@ -12,7 +12,7 @@ define(['jquery', 'skate', 'amdInitializer/require'], function ($, skate, requir
                 return moduleInitialized.promise();
             }
 
-            $target.attr('data-module-loaded', 'true')
+            $target.attr('data-module-loaded', 'true');
 
             require([data.moduleName], function (module) {
                 var copyOfData = $.extend({}, data);
@@ -42,7 +42,7 @@ define(['jquery', 'skate', 'amdInitializer/require'], function ($, skate, requir
                 moduleLoadedCallbacks.add(callback);
             },
             unload: function () {
-                skateComponent.destroy()
+                skateComponent.destroy();
             }
         };
     };

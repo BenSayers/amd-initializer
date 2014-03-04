@@ -27,7 +27,7 @@ define(['squire', 'jquery'], function (Squire, $) {
         });
 
         afterEach(function () {
-            initializerApi.unload()
+            initializerApi.unload();
         });
 
         var insertIntoDom = function (markup) {
