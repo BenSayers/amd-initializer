@@ -1,6 +1,29 @@
 define(['jquery', 'skate', 'amdInitializer/require'], function ($, skate, require) {
     var amdInitializerFactory = function (selector) {
         var moduleLoadedCallbacks = $.Callbacks();
+        var initialModules = (function () {
+            var createInitialModule = function (element) {
+                return {
+                    deferred: $.Deferred(),
+                    element: element
+                };
+            };
+
+            return $.map(document.querySelectorAll(selector), createInitialModule);
+        })();
+
+        var markInitialModuleAsLoaded = function (element, moduleName) {
+            var matchesElement = function (promise) {
+                return promise.element === element;
+            };
+
+            var resolveDeferred = function (index, module) {
+                module.deferred.resolve(moduleName);
+            };
+
+            var modules = $.grep(initialModules, matchesElement);
+            $.each(modules, resolveDeferred);
+        };
 
         var initializeModule = function () {
             var moduleInitialized = new $.Deferred();
@@ -33,11 +56,16 @@ define(['jquery', 'skate', 'amdInitializer/require'], function ($, skate, requir
         };
 
         var skateComponent = skate(selector, function (element) {
-            initializeModule.apply(element);
+            initializeModule.apply(element).then(function (moduleName) {
+                markInitialModuleAsLoaded(element, moduleName);
+            });
         });
-        var modulesLoadedPromises = $('body').find(selector).map(initializeModule).toArray();
+
+        var initialModulesHaveLoaded = $.map(initialModules, function (data) {
+            return data.deferred.promise();
+        });
         return {
-            initialModulesLoaded: $.when.apply($, modulesLoadedPromises).promise(),
+            initialModulesLoaded: $.when.apply($, initialModulesHaveLoaded).promise(),
             onModuleLoaded: function (callback) {
                 moduleLoadedCallbacks.add(callback);
             },
