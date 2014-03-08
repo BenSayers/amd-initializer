@@ -137,7 +137,7 @@ define(['squire', 'jquery'], function (Squire, $) {
             setTimeout(function () {
                 expect(module1.load).not.toHaveBeenCalled();
                 done();
-            }, 100)
+            }, 100);
         });
     });
 });
