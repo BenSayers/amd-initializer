@@ -35,13 +35,13 @@ define(['squire', 'jquery'], function (Squire, $) {
             return $('.target');
         };
 
-        var invokeLoad = function (selector) {
-            initializerApi = amdInitializer.load({ selector: selector });
+        var invokeLoad = function (options) {
+            initializerApi = amdInitializer.load(options);
         };
 
         it('should call load on the loaded module', function (done) {
             var $target = insertIntoDom('<div class="module" data-module-name="path/to/module1"></div>');
-            invokeLoad('.module');
+            invokeLoad({ selector: '.module' });
 
             initializerApi.initialModulesLoaded.then(function () {
                 expect(module1.load).toHaveBeenCalled();
@@ -54,7 +54,7 @@ define(['squire', 'jquery'], function (Squire, $) {
 
         it('should pass parameters indicated by the markup to the loaded module', function (done) {
             insertIntoDom('<div class="module" data-module-name="path/to/module1" data-parameter-one="param-1" data-parameter-two="param2"></div>');
-            invokeLoad('.module');
+            invokeLoad({ selector: '.module' });
 
             initializerApi.initialModulesLoaded.then(function () {
                 expect(module1.load).toHaveBeenCalledWith(jasmine.any(Object), {
@@ -67,7 +67,7 @@ define(['squire', 'jquery'], function (Squire, $) {
 
         it('should raise an event when the module has loaded', function (done) {
             insertIntoDom('<div class="module" data-module-name="path/to/module1"></div>');
-            invokeLoad('.module');
+            invokeLoad({ selector: '.module' });
 
             initializerApi.onModuleLoaded(function (moduleDetails) {
                 expect(moduleDetails.name).toBe('path/to/module1');
@@ -77,7 +77,7 @@ define(['squire', 'jquery'], function (Squire, $) {
 
         it('should load multiple modules', function (done) {
             insertIntoDom('<div class="module" data-module-name="path/to/module1"></div><div class="module" data-module-name="path/to/module2"></div>');
-            invokeLoad('.module');
+            invokeLoad({ selector: '.module' });
 
             initializerApi.initialModulesLoaded.then(function () {
                 expect(module1.load).toHaveBeenCalled();
@@ -89,7 +89,7 @@ define(['squire', 'jquery'], function (Squire, $) {
         it('should continue loading other modules if the first one throws an exception', function (done) {
             insertIntoDom('<div class="module" data-module-name="path/to/module1"></div><div class="module" data-module-name="path/to/module2"></div>');
             module1.load.and.throwError('module1 failed to load');
-            invokeLoad('.module');
+            invokeLoad({ selector: '.module' });
 
             initializerApi.initialModulesLoaded.then(function () {
                 expect(module1.load).toHaveBeenCalled();
@@ -100,7 +100,7 @@ define(['squire', 'jquery'], function (Squire, $) {
 
         it('should load a module whose markup is added after initialize has been invoked', function (done) {
             var $target = insertIntoDom('');
-            invokeLoad('.module');
+            invokeLoad({ selector: '.module' });
             $target.append('<div class="module" data-module-name="path/to/module1"></div>');
 
             initializerApi.onModuleLoaded(function () {
@@ -111,7 +111,7 @@ define(['squire', 'jquery'], function (Squire, $) {
 
         it('should mark modules that have been loaded with a data-module-loaded attribute', function (done) {
             var $target = insertIntoDom('<div class="module" data-module-name="path/to/module1"></div>');
-            invokeLoad('.module');
+            invokeLoad({ selector: '.module' });
 
             initializerApi.initialModulesLoaded.then(function () {
                 expect($target.find('.module')).toHaveAttr('data-module-loaded', 'true');
@@ -121,12 +121,23 @@ define(['squire', 'jquery'], function (Squire, $) {
 
         it('should not load modules marked with the data-module-loaded attribute', function (done) {
             insertIntoDom('<div class="module" data-module-name="path/to/module1" data-module-loaded="true"></div>');
-            invokeLoad('.module');
+            invokeLoad({ selector: '.module' });
 
             initializerApi.initialModulesLoaded.then(function () {
                 expect(module1.load).not.toHaveBeenCalled();
                 done();
             });
+        });
+        
+        it('should allow watching the dom to be disabled', function (done) {
+            invokeLoad({ selector: '.module', watchDom: false });
+            insertIntoDom('<div class="module" data-module-name="path/to/module1"></div>');
+
+            //TODO: Find a way to test this without using setTimeout
+            setTimeout(function () {
+                expect(module1.load).not.toHaveBeenCalled();
+                done();
+            }, 100)
         });
     });
 });

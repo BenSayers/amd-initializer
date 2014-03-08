@@ -53,11 +53,12 @@ amdInitializer needs to be loaded onto the page and told to start looking at the
         initializer.load({ selector: '.module' });
     });
 
-amd-initializer declares itself as an AMD module called `amdInitializer`. When `load` is first called the page will be searched for matching dom elements and modules found will be loaded immediately. If matching dom elements are added to the page after load is called they will automatically be discovered and the modules loaded.
+amd-initializer declares itself as an AMD module called `amdInitializer`. When `load` is first called the page will be searched for matching dom elements and modules found will be loaded immediately. By default if matching dom elements are added to the page after load is called they will automatically be discovered and the modules loaded.
 
 The object passed to the `load` function supports the following options:
 
-- `selector`: A css selector pointing to the dom elements that are decorated with module names and parameters.
+- `selector`: A css selector pointing to the dom elements that are decorated with module names and parameters. This option is required.
+- `watchDom`: If set to `true` the dom will be watched for elements added that match the `selector` and the module that element points to will be loaded. If set to `false` the dom will not be watched. The default value is `true`.
 
 ##Contributing
 

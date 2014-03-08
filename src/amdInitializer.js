@@ -1,5 +1,9 @@
 define(['jquery', 'skate', 'amdInitializer/require'], function ($, skate, require) {
-    var amdInitializerFactory = function (selector) {
+    var defaultOptions = {
+        watchDom: true
+    };
+
+    var amdInitializerFactory = function (userOptions) {
         var moduleLoadedCallbacks = $.Callbacks();
 
         var initializeModule = function () {
@@ -32,10 +36,20 @@ define(['jquery', 'skate', 'amdInitializer/require'], function ($, skate, requir
             return moduleInitialized.promise();
         };
 
-        var skateComponent = skate(selector, function (element) {
-            initializeModule.apply(element);
-        });
-        var modulesLoadedPromises = $('body').find(selector).map(initializeModule).toArray();
+        var options = $.extend({}, defaultOptions, userOptions);
+        var skateComponent;
+        if (options.watchDom) {
+             skateComponent = skate(options.selector, function (element) {
+                initializeModule.apply(element);
+            });
+        } else {
+            skateComponent = {
+                destroy: $.noop
+            };
+        }
+
+        var modulesLoadedPromises = $('body').find(options.selector).map(initializeModule).toArray();
+
         return {
             initialModulesLoaded: $.when.apply($, modulesLoadedPromises).promise(),
             onModuleLoaded: function (callback) {
@@ -49,7 +63,7 @@ define(['jquery', 'skate', 'amdInitializer/require'], function ($, skate, requir
 
     return {
         load: function (options) {
-            return amdInitializerFactory(options.selector);
+            return amdInitializerFactory(options);
         }
     };
 });
