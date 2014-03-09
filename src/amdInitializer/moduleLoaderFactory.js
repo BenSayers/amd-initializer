@@ -1,5 +1,5 @@
 define(['jquery', 'amdInitializer/require'], function ($, require) {
-    var moduleLoaderFactory = function (options, moduleLoadedCallbacks) {
+    var moduleLoaderFactory = function (options) {
         return {
             load: function () {
                 var moduleLoaded = new $.Deferred();
@@ -20,11 +20,10 @@ define(['jquery', 'amdInitializer/require'], function ($, require) {
                     try {
                         module.load($target, copyOfData);
                     } catch (error) {
-
+                        options.moduleErrorCallbacks.fire({ exception: error });
                     }
 
-                    moduleLoadedCallbacks.fire({name: data.moduleName});
-
+                    options.moduleLoadedCallbacks.fire({name: data.moduleName});
                     return moduleLoaded.resolve(data.moduleName);
                 });
 
@@ -34,8 +33,8 @@ define(['jquery', 'amdInitializer/require'], function ($, require) {
     };
 
     return {
-        create: function (options, moduleLoadedCallbacks) {
-            return moduleLoaderFactory(options, moduleLoadedCallbacks);
+        create: function (options) {
+            return moduleLoaderFactory(options);
         }
     };
 });

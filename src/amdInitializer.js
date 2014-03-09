@@ -4,16 +4,22 @@ define(['jquery', 'skate', 'amdInitializer/moduleLoaderFactory', 'amdInitializer
     };
 
     var amdInitializerFactory = function (userOptions) {
-        var options = $.extend({}, defaultOptions, userOptions);
-        var moduleLoadedCallbacks = $.Callbacks();
-        var moduleLoader = moduleLoaderFactory.create(options, moduleLoadedCallbacks);
+        var internalOptions = {
+            moduleErrorCallbacks: $.Callbacks(),
+            moduleLoadedCallbacks: $.Callbacks()
+        };
+        var options = $.extend({}, defaultOptions, userOptions, internalOptions);
+        var moduleLoader = moduleLoaderFactory.create(options);
         var domWatcher = domWatcherFactory.create(options, moduleLoader);
         var modulesLoadedPromises = $('body').find(options.selector).map(moduleLoader.load).toArray();
 
         return {
             initialModulesLoaded: $.when.apply($, modulesLoadedPromises).promise(),
+            onModuleError: function (callback) {
+                options.moduleErrorCallbacks.add(callback);
+            },
             onModuleLoaded: function (callback) {
-                moduleLoadedCallbacks.add(callback);
+                options.moduleLoadedCallbacks.add(callback);
             },
             unload: function () {
                 domWatcher.destroy();

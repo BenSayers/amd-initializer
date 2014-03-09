@@ -86,6 +86,20 @@ define(['squire', 'jquery'], function (Squire, $) {
             });
         });
 
+        it('should allow callers to register to errors thrown by modules', function (done) {
+            insertIntoDom('<div class="module" data-module-name="path/to/module1"></div><div class="module" data-module-name="path/to/module2"></div>');
+            var error = new Error('module1 failed to load');
+            module1.load.and.throwError(error);
+            invokeLoad({ selector: '.module' });
+            var onModuleError = jasmine.createSpy('onModuleError');
+            initializerApi.onModuleError(onModuleError);
+
+            initializerApi.initialModulesLoaded.then(function () {
+                expect(onModuleError).toHaveBeenCalledWith({ exception: error });
+                done();
+            });
+        });
+
         it('should continue loading other modules if the first one throws an exception', function (done) {
             insertIntoDom('<div class="module" data-module-name="path/to/module1"></div><div class="module" data-module-name="path/to/module2"></div>');
             module1.load.and.throwError('module1 failed to load');
