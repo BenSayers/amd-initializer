@@ -46,8 +46,8 @@ The module must return an object with a `load` function on it. The function will
 - `$target`: A jQuery object pointing to the dom element the module was loaded on. Append any html and other behaviour to this element.
 - `params` - All the other data attributes except data-module-name will be passed as a JavaScript object. The attributes are converted to a JavaScript object using [jQuery.data](http://api.jquery.com/data/#data-html5).
 
-###Starting amd-initializer
-amdInitializer needs to be loaded onto the page and told to start looking at the dom for modules.
+###Starting
+amd-initializer needs to be loaded onto the page and told to start looking at the dom for modules.
 
     require(['amdInitializer'], function(initializer) {
         initializer.load({ selector: '.module' });
@@ -59,6 +59,33 @@ The object passed to the `load` function supports the following options:
 
 - `selector`: A css selector pointing to the dom elements that are decorated with module names and parameters. This option is required.
 - `watchDom`: If set to `true` the dom will be watched for elements added that match the `selector` and the module that element points to will be loaded. If set to `false` the dom will not be watched. The default value is `true`.
+
+###After Starting
+Once amd-initializer has been started it can be useful to know what it is doing. There are several ways this information is exposed.
+
+    require(['amdInitializer'], function(initializer) {
+        var api = initializer.load({ selector: '.module' });
+
+        api.initialModulesLoaded.then(function () {
+            console.log('all the initial modules on the page have been loaded');
+        });
+
+        api.onModuleLoaded(function (module) {
+            console.log(module.name + ' was just loaded');
+        });
+
+        api.onModuleError(function (error) {
+            console.log('the following error occurred: ' + error.exception.message);
+        });
+    });
+
+`initializer.load` returns an object with the following properties:
+
+- `initialModulesLoaded`: This is a [jQuery Promise](http://api.jquery.com/Types/#Promise) that will be resolved when all the dom elements matching the `selector` are found and `load` has been called. This promise is resolved even if some modules throw exceptions when loaded.
+- `onModuleLoaded`: This is a function that accepts a callback as the first argument. The callback will be invoked once for each module that is loaded after `module.load` has finished executing. The callback will be passed a module object containing the following properties:
+    - `name`: The name of the module that was loaded.
+- `onModuleError`: This is a function that accepts a callback as the first argument. The callback will be invoked when a call to `module.load` throws an exception. The callback will be passed an error object containing the following properties:
+    - `exception`: The exception object passed to the catch block of the try/catch surrounding the call to `module.load`.
 
 ##Contributing
 
