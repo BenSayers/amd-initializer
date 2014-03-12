@@ -1,9 +1,9 @@
-/*! amdInitializer v0.0.9 | (c) 2014 Ben Sayers | Released under the MIT licence */
+/*! amdInitializer v0.0.10 | (c) 2014 Ben Sayers | Released under the MIT licence */
 define('amdInitializer/require',['require'], function (require) {
     return require;
 });
 define('amdInitializer/moduleLoaderFactory',['jquery', 'amdInitializer/require'], function ($, require) {
-    var moduleLoaderFactory = function (options, moduleLoadedCallbacks) {
+    var moduleLoaderFactory = function (options) {
         return {
             load: function () {
                 var moduleLoaded = new $.Deferred();
@@ -24,11 +24,10 @@ define('amdInitializer/moduleLoaderFactory',['jquery', 'amdInitializer/require']
                     try {
                         module.load($target, copyOfData);
                     } catch (error) {
-
+                        options.moduleErrorCallbacks.fire({ exception: error });
                     }
 
-                    moduleLoadedCallbacks.fire({name: data.moduleName});
-
+                    options.moduleLoadedCallbacks.fire({name: data.moduleName});
                     return moduleLoaded.resolve(data.moduleName);
                 });
 
@@ -38,8 +37,8 @@ define('amdInitializer/moduleLoaderFactory',['jquery', 'amdInitializer/require']
     };
 
     return {
-        create: function (options, moduleLoadedCallbacks) {
-            return moduleLoaderFactory(options, moduleLoadedCallbacks);
+        create: function (options) {
+            return moduleLoaderFactory(options);
         }
     };
 });
@@ -68,16 +67,22 @@ define('amdInitializer',['jquery', 'skate', 'amdInitializer/moduleLoaderFactory'
     };
 
     var amdInitializerFactory = function (userOptions) {
-        var options = $.extend({}, defaultOptions, userOptions);
-        var moduleLoadedCallbacks = $.Callbacks();
-        var moduleLoader = moduleLoaderFactory.create(options, moduleLoadedCallbacks);
+        var internalOptions = {
+            moduleErrorCallbacks: $.Callbacks(),
+            moduleLoadedCallbacks: $.Callbacks()
+        };
+        var options = $.extend({}, defaultOptions, userOptions, internalOptions);
+        var moduleLoader = moduleLoaderFactory.create(options);
         var domWatcher = domWatcherFactory.create(options, moduleLoader);
         var modulesLoadedPromises = $('body').find(options.selector).map(moduleLoader.load).toArray();
 
         return {
             initialModulesLoaded: $.when.apply($, modulesLoadedPromises).promise(),
+            onModuleError: function (callback) {
+                options.moduleErrorCallbacks.add(callback);
+            },
             onModuleLoaded: function (callback) {
-                moduleLoadedCallbacks.add(callback);
+                options.moduleLoadedCallbacks.add(callback);
             },
             unload: function () {
                 domWatcher.destroy();
