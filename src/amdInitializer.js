@@ -1,4 +1,9 @@
-define(['jquery', 'skate', 'amdInitializer/moduleLoaderFactory', 'amdInitializer/domWatcherFactory'], function ($, skate, moduleLoaderFactory, domWatcherFactory) {
+define([
+    'jquery',
+    'skate',
+    'amdInitializer/moduleLoaderFactory',
+    'amdInitializer/domWatcherFactory'
+], function ($, skate, moduleLoaderFactory, domWatcherFactory) {
     var defaultOptions = {
         watchDom: true
     };

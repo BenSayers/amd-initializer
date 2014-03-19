@@ -48,6 +48,9 @@ module.exports = function (grunt) {
             }
         },
         jshint: {
+            options: {
+                jshintrc: '.jshintrc'
+            },
             build: {
                 files: {
                     src: ['build/amdInitializer.js']

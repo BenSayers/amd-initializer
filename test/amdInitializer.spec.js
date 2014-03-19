@@ -53,7 +53,9 @@ define(['squire', 'jquery'], function (Squire, $) {
         });
 
         it('should pass parameters indicated by the markup to the loaded module', function (done) {
-            insertIntoDom('<div class="module" data-module-name="path/to/module1" data-parameter-one="param-1" data-parameter-two="param2"></div>');
+
+            insertIntoDom('<div class="module" data-module-name="path/to/module1" data-parameter-one="param-1"' +
+                ' data-parameter-two="param2"></div>');
             invokeLoad({ selector: '.module' });
 
             initializerApi.initialModulesLoaded.then(function () {
@@ -76,7 +78,8 @@ define(['squire', 'jquery'], function (Squire, $) {
         });
 
         it('should load multiple modules', function (done) {
-            insertIntoDom('<div class="module" data-module-name="path/to/module1"></div><div class="module" data-module-name="path/to/module2"></div>');
+            insertIntoDom('<div class="module" data-module-name="path/to/module1"></div>' +
+                '<div class="module" data-module-name="path/to/module2"></div>');
             invokeLoad({ selector: '.module' });
 
             initializerApi.initialModulesLoaded.then(function () {
@@ -87,7 +90,8 @@ define(['squire', 'jquery'], function (Squire, $) {
         });
 
         it('should allow callers to register to errors thrown by modules', function (done) {
-            insertIntoDom('<div class="module" data-module-name="path/to/module1"></div><div class="module" data-module-name="path/to/module2"></div>');
+            insertIntoDom('<div class="module" data-module-name="path/to/module1"></div>' +
+                '<div class="module" data-module-name="path/to/module2"></div>');
             var error = new Error('module1 failed to load');
             module1.load.and.throwError(error);
             invokeLoad({ selector: '.module' });
@@ -101,7 +105,8 @@ define(['squire', 'jquery'], function (Squire, $) {
         });
 
         it('should continue loading other modules if the first one throws an exception', function (done) {
-            insertIntoDom('<div class="module" data-module-name="path/to/module1"></div><div class="module" data-module-name="path/to/module2"></div>');
+            insertIntoDom('<div class="module" data-module-name="path/to/module1"></div>' +
+                '<div class="module" data-module-name="path/to/module2"></div>');
             module1.load.and.throwError('module1 failed to load');
             invokeLoad({ selector: '.module' });
 

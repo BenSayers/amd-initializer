@@ -1,4 +1,4 @@
-define(['skate'], function (skate) {
+define(['jquery', 'skate'], function ($, skate) {
     var domWatcherFactory = function (options, loader) {
         if (options.watchDom) {
             return skate(options.selector, function (element) {
