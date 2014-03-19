@@ -7,7 +7,7 @@ define(['skate'], function (skate) {
         }
 
         return{
-            destroy: $.noop
+            deafen: $.noop
         };
     };
 

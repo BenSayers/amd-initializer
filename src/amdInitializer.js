@@ -22,7 +22,7 @@ define(['jquery', 'skate', 'amdInitializer/moduleLoaderFactory', 'amdInitializer
                 options.moduleLoadedCallbacks.add(callback);
             },
             unload: function () {
-                domWatcher.destroy();
+                domWatcher.deafen();
             }
         };
     };

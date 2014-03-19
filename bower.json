@@ -27,7 +27,7 @@
   ],
   "dependencies": {
     "jquery": "~2.1.0",
-    "skate": "~0.1.0"
+    "skate": "~0.2.0"
   },
   "devDependencies": {
     "squire": "~0.2.0",
