@@ -1,4 +1,4 @@
-/*! amdInitializer v0.0.10 | (c) 2014 Ben Sayers | Released under the MIT licence */
+/*! amdInitializer v0.0.11 | (c) 2014 Ben Sayers | Released under the MIT licence */
 define('amdInitializer/require',['require'], function (require) {
     return require;
 });
@@ -42,7 +42,7 @@ define('amdInitializer/moduleLoaderFactory',['jquery', 'amdInitializer/require']
         }
     };
 });
-define('amdInitializer/domWatcherFactory',['skate'], function (skate) {
+define('amdInitializer/domWatcherFactory',['jquery', 'skate'], function ($, skate) {
     var domWatcherFactory = function (options, loader) {
         if (options.watchDom) {
             return skate(options.selector, function (element) {
@@ -51,7 +51,7 @@ define('amdInitializer/domWatcherFactory',['skate'], function (skate) {
         }
 
         return{
-            destroy: $.noop
+            deafen: $.noop
         };
     };
 
@@ -61,7 +61,11 @@ define('amdInitializer/domWatcherFactory',['skate'], function (skate) {
         }
     };
 });
-define('amdInitializer',['jquery', 'skate', 'amdInitializer/moduleLoaderFactory', 'amdInitializer/domWatcherFactory'], function ($, skate, moduleLoaderFactory, domWatcherFactory) {
+define('amdInitializer',[
+    'jquery',
+    'amdInitializer/moduleLoaderFactory',
+    'amdInitializer/domWatcherFactory'
+], function ($, moduleLoaderFactory, domWatcherFactory) {
     var defaultOptions = {
         watchDom: true
     };
@@ -85,7 +89,7 @@ define('amdInitializer',['jquery', 'skate', 'amdInitializer/moduleLoaderFactory'
                 options.moduleLoadedCallbacks.add(callback);
             },
             unload: function () {
-                domWatcher.destroy();
+                domWatcher.deafen();
             }
         };
     };
