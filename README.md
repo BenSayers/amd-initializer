@@ -3,6 +3,16 @@ amd-initializer is a small JavaScript library that loads AMD modules based on de
 
 This library is under early development and does not yet have a stable api.
 
+##Browser Support
+The following browsers are supported:
+
+- IE10, IE11
+- Firefox latest (Mac and Windows)
+- Chrome latest (Mac and Windows)
+- Safari latest (Mac)
+
+Browser support is ensured by running this projects tests on each supported browser.
+
 ##Installing
 amd-initializer declares itself as an AMD module. It has dependencies on any AMD loader, jquery and a library called skate. You need to ensure that the AMD dependencies `jquery` and `skate` will resolve in order for amd-initializer to work.
 

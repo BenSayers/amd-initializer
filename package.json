@@ -4,7 +4,7 @@
   "description": "amd-loader ==========",
   "main": "",
   "scripts": {
-    "test": "grunt"
+    "test": "grunt ci"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "karma-requirejs": "~0.2.1",
     "karma-jasmine": "~0.2.0",
     "karma-phantomjs-launcher": "~0.1.2",
-    "karma-chrome-launcher": "~0.1.2"
+    "karma-chrome-launcher": "~0.1.2",
+    "karma-sauce-launcher": "^0.2.6"
   }
 }

@@ -1,7 +1,8 @@
-module.exports = function(config) {
+module.exports = function (config) {
     config.set({
         basePath: '../../',
         browsers: ['PhantomJS'],
+        captureTimeout: 120000,
         files: [
             'src/require.config.js',
             'test/support/test-runner.js',
@@ -11,6 +12,7 @@ module.exports = function(config) {
             {pattern: 'test/**/*.js', included: false},
             {pattern: 'bower_components/**/*.js', included: false}
         ],
-        frameworks: ['requirejs', 'jasmine']
+        frameworks: ['requirejs', 'jasmine'],
+        reporters: ['dots']
     });
 };
