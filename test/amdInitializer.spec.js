@@ -1,22 +1,27 @@
-define(['squire', 'jquery'], function (Squire, $) {
+define(['squire', 'jquery', 'skate'], function (Squire, $, Skate) {
     describe('amdInitializer', function () {
         var amdInitializer;
         var initializerApi;
         var module1;
         var module2;
+        var injectedSkate;
 
         beforeEach(function (done) {
             var injector = new Squire();
 
             module1 = jasmine.createSpyObj('module1', ['load']);
             module2 = jasmine.createSpyObj('module2', ['load']);
+            injectedSkate = jasmine.createSpy('skate').and.callFake(function () {
+                return Skate.apply(Skate, arguments);
+            });
             var require = function () {
                 injector.require.apply(injector, arguments);
             };
             var mocks = {
                 'amdInitializer/require': require,
                 'path/to/module1': module1,
-                'path/to/module2': module2
+                'path/to/module2': module2,
+                'skate': injectedSkate
             };
 
             injector.mock(mocks);
@@ -147,16 +152,12 @@ define(['squire', 'jquery'], function (Squire, $) {
                 done();
             });
         });
-        
-        it('should allow watching the dom to be disabled', function (done) {
+
+        it('should allow watching the dom to be disabled', function () {
             invokeLoad({ selector: '.module', watchDom: false });
             insertIntoDom('<div class="module" data-module-name="path/to/module1"></div>');
 
-            //TODO: Find a way to test this without using setTimeout
-            setTimeout(function () {
-                expect(module1.load).not.toHaveBeenCalled();
-                done();
-            }, 100);
+            expect(injectedSkate).not.toHaveBeenCalled();
         });
     });
 });
