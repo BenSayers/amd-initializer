@@ -3,17 +3,7 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('bower.json'),
         karma: {
             options: {
-                browsers: ['PhantomJS'],
-                files: [
-                    'src/require.config.js',
-                    'test/support/test-runner.js',
-                    'bower_components/jquery/dist/jquery.js',
-                    'bower_components/jasmine-jquery/lib/jasmine-jquery.js',
-                    {pattern: 'src/**/*.js', included: false},
-                    {pattern: 'test/**/*.js', included: false},
-                    {pattern: 'bower_components/**/*.js', included: false}
-                ],
-                frameworks: ['requirejs', 'jasmine']
+                configFile: 'test/support/karma.config.js'
             },
             debug: {
                 browsers: ['Chrome']
@@ -58,7 +48,7 @@ module.exports = function (grunt) {
             },
             source: {
                 files: {
-                    src: ['src/**/*.js', 'test/**/*.js']
+                    src: ['src/**/*.js', 'test/**/*.js', '!test/support/karma.config.js']
                 }
             }
         },
