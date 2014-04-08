@@ -51,7 +51,7 @@ module.exports = function (grunt) {
                 }
             },
             debug: {
-                browsers: ['Chrome']
+                browsers: [grunt.option('browser') || 'Chrome']
             },
             watch: {
                 autoWatch: true
