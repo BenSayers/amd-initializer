@@ -1,8 +1,8 @@
 define(['jquery', 'skate'], function ($, skate) {
     var domWatcherFactory = function (options, loader) {
         if (options.watchDom) {
-            return skate(options.selector, function (element) {
-                loader.load.apply(element);
+            return skate(options.selector, function () {
+                loader.load.apply(this);
             });
         }
 
